@@ -1,5 +1,9 @@
 import time
 import serial
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class SerialController:
     """
@@ -17,10 +21,12 @@ class SerialController:
         
     def open(self)->None:
         if not self.ise.is_open:
+            log.debug(f"Opening device connection")
             self.ise.open()
 
     def close(self)->None:
         if self.ise.is_open:
+            log.debug(f"Closing device connection")
             self.ise.close()
             
     def send(self, *args : str)-> str:
@@ -37,15 +43,15 @@ class SerialController:
             str: The response from the serial device up to and including the 'answer_end' delimiter.
         """
         self.open()
-        print(args)
         try:
             for i, arg in enumerate(args):
+                log.debug(f"Sending command {arg} to device")
                 self.ise.write((str(arg)+"\r\n").encode())
                 if i!=len(args)-1:
                     time.sleep(0.5)
             response = self.ise.read_until((self.answer_end).encode(), 100).decode()
+            log.debug(f"Got following response {response} from device")
         except Exception as err:
-            print(err)
+            log.error(err)
         self.close()
         return response
-    

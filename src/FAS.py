@@ -1,7 +1,6 @@
-
-from serialcontroller import SerialController
-from utils_constants import axis_to_system_units, system_default_units, axis_units, Axis, system_to_axis_units
-from utils_constants import parse_number_string
+from .serialcontroller import SerialController
+from .utils_constants import axis_to_system_units, system_default_units, axis_units, Axis, system_to_axis_units
+from .utils_constants import parse_number_string
 from dataclasses import dataclass
 import logging
 
@@ -29,15 +28,15 @@ class FiveAxisSystem:
         self.controller = controller
 
     def _move_single_axis(self, axis: str, pos: int)->str:
-        log.debug(f"Moving axis {axis} to position {pos}")
+        log.debug(f"Moving axis {axis} to position {int(pos)}")
         axis_command = getattr(Axis, axis.upper())
-        return self.controller.send(f"{axis_command}-Achse:{pos}", "100", "100")
+        return self.controller.send(f"{axis_command}-Achse:{int(pos)}", "100", "100")
         
     def move_absolute_position(self, x=None, y=None, z=None, rot=None, tilt=None) -> None:
         # Create a dictionary from the local variables (axis names and values),
         # filtering out None values to only attempt to move axes that are specified.
         moves = {axis: value for axis, value in locals().items() if axis != "self" and value is not None}
-        
+        log.debug(f"Moving to absolute position {moves}")
         for axis, pos in moves.items():
             converted_pos = system_to_axis_units(pos, axis.upper())
             answer = self._move_single_axis(axis, converted_pos)
@@ -50,6 +49,7 @@ class FiveAxisSystem:
         # Create a dictionary from the local variables (axis names and values),
         # filtering out None values to only attempt to move axes that are specified.
         relative_moves = {axis: value for axis, value in locals().items() if axis != "self" and value is not None}
+        log.debug(f"Calculating position from relative input {relative_moves}")
         absolute_moves = {}
         for axis, delta in relative_moves.items():
             current_value = getattr(self.current_position, axis.upper())
@@ -57,6 +57,7 @@ class FiveAxisSystem:
         self.move_absolute_position(**absolute_moves)
 
     def _parse_answer(self, answer) -> Position:
+        log.debug(f"Parsing answer {answer} into Position instance")
         answer_without_ending = answer.split(self.controller.answer_end)
         if len(answer_without_ending) > 1:
             split_axis = answer_without_ending[0].split("Achse:")
@@ -67,4 +68,4 @@ class FiveAxisSystem:
         
     def log_current_position(self) -> None:
         log.info("The current position is:")
-        log.info(Position)
+        log.info(self.current_position)

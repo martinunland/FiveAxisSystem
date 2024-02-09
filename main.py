@@ -1,6 +1,10 @@
 from src.FAS import FiveAxisSystem
 from src.serialcontroller import SerialController
-from utils_constants import Units
+from src.utils_constants import Units
+import logging
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 controller = SerialController("COM5")
 FAS = FiveAxisSystem(controller)
