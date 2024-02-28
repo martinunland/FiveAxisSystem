@@ -1,6 +1,6 @@
 from tqdm import tqdm
 import numpy as np
-
+import functools
 from FAS import Position
 
 def linear(x,slope, const):
@@ -14,6 +14,8 @@ class PathTime:
         "tilt" : {"a_slope": 10.919, "a_const": 131.51, "s_slope": 60.3046e-3, "s_const": -1.389e-3, "t0": 	821.750e-3},
         "rot" : {"a_slope": 3.271, "a_const": 33.37, "s_slope": 20.0614e-3, "s_const": -2.06e-3, "t0": 821.928e-3}
     }
+
+    @functools.lru_cache(maxsize=1000000)
     def ramp_motion_time(self, distance, max_speed, acceleration):
         # Distance covered during rampind up down
         d_ramp = max_speed * max_speed / acceleration
@@ -31,6 +33,7 @@ class PathTime:
             time = t_ramp+t_const
         return time
     
+    @functools.lru_cache(maxsize=1000000)
     def model(self, distance, speed_adc, acceleration_adc,  a_slope, a_const, s_slope, s_const, t0):
         acceleration = linear(acceleration_adc, a_slope, a_const)
         max_speed = linear(speed_adc, s_slope, s_const)

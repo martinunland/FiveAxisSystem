@@ -1,3 +1,4 @@
+from scheduling import FASSchedule
 from src.FAS import FiveAxisSystem
 from src.serialcontroller import SerialController
 from src.utils_constants import Units
@@ -19,3 +20,20 @@ FAS.move_relative_distance(y=5) #moves y axis 5cm from current position
 FAS.move_relative_distance(x = 2/Units.MM, y=1/Units.M, tilt= 2/Units.CENT_DEG)
 
 FAS.log_current_position()
+
+
+#Scheduling example
+schedule = FASSchedule()
+for i in range(1000):
+    schedule.append_programmed_position(np.random.randint(0,100), np.random.randint(0,100), np.random.randint(0,100))
+print(schedule.calculate_total_path_time()) # In this example I got 864 min
+
+#Optimize path so next move is always shortest distance
+schedule.optimize_path()
+
+print(schedule.calculate_total_path_time()) # In this example I got 176 min
+
+
+#Going through schedule
+for position in schedule:
+    FAS.move_absolute_position(**position.to_dict())
