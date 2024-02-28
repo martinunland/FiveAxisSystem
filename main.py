@@ -1,8 +1,9 @@
-from scheduling import FASSchedule
+from src.scheduling import FASSchedule
 from src.FAS import FiveAxisSystem
 from src.serialcontroller import SerialController
 from src.utils_constants import Units
 import logging
+import numpy as np 
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
