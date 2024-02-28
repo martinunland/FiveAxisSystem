@@ -1,16 +1,5 @@
 # Five Axis System Control Library
 
-This Python library is designed to facilitate the control and scheduling of a Five Axis System (FAS) through serial communication. The system allows for precise movements along five different axes: X, Y, Z, Rotation, and Tilt, making it suitable for a wide range of applications from robotics to manufacturing.
-
-## Features
-
-- Absolute and relative positioning commands
-- Conversion between different units of measurement
-- Scheduling of movement sequences
-- Path optimization to reduce total movement time
-- Logging of current position and movements
-- Serial communication with hardware
-
 ## Installation
 
 To use this library, clone the repository to your local machine:
