@@ -33,6 +33,11 @@ schedule.optimize_path()
 
 print(schedule.calculate_total_path_time()) # In this example I got 176 min
 
+#You can save optimized schedule
+schedule.write_schedule_to_file("optimized_position_schedule.pickle")
+
+#And load it in future measurements directly
+schedule.load_schedule_from_file("optimized_position_schedule.pickle")
 
 #Going through schedule
 for position in schedule:
