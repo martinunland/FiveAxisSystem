@@ -62,20 +62,31 @@ FAS.move_relative_distance(x=2/Units.MM, y=1/Units.M, tilt=2/Units.CENT_DEG)
 
 ### Scheduling Movements
 
-You can create a schedule of movements and optimize the path to reduce total movement time:
+You can create a schedule of movements:
 
 ```python
 from scheduling import FASSchedule
 schedule = FASSchedule()
 # Append positions to the schedule
-for i in range(1000):
-    schedule.append_programmed_position(np.random.randint(0,100), np.random.randint(0,100), np.random.randint(0,100))
-
-# Optimize the movement path
-schedule.optimize_path()
+schedule.append_programmed_position(x=50, y=50, rot=30)
+schedule.append_programmed_position(x=50, y=51, rot=30)
+...
 # Execute scheduled movements
 for position in schedule:
     FAS.move_absolute_position(**position.to_dict())
+```
+For large measurement, you can optimize the total path. In this example all movements would have taken ~14 hrs, after optimization 3hrs
+```python
+for i in range(1000):
+    schedule.append_programmed_position(np.random.randint(0,100), np.random.randint(0,100), np.random.randint(0,100))
+# Optimize the movement path
+schedule.optimize_path()
+print(schedule.calculate_total_path_time())
+```
+You can save and load (optimized) schedules:
+```python
+schedule.write_schedule_to_file("optimized_position_schedule.pickle")
+schedule.load_schedule_from_file("optimized_position_schedule.pickle")
 ```
 
 ### Logging
@@ -85,11 +96,3 @@ The current position can be logged with:
 ```python
 FAS.log_current_position()
 ```
-
-## Contributing
-
-Contributions to the library are welcome! Please submit pull requests with any new features or bug fixes.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
