@@ -18,6 +18,7 @@ class SerialController:
         self.ise = serial.Serial(port=port, timeout=timeout)
         self.ise.close()  # Close initially, open only when needed
         self.answer_end = answer_end
+        self.sleep_time = 0.5
         
     def open(self)->None:
         if not self.ise.is_open:
@@ -48,9 +49,14 @@ class SerialController:
                 log.debug(f"Sending command {arg} to device")
                 self.ise.write((str(arg)+"\r\n").encode())
                 if i!=len(args)-1:
-                    time.sleep(0.5)
+                    time.sleep(self.sleep_time)
+            start = time.time()
             response = self.ise.read_until((self.answer_end).encode(), 100).decode()
-            log.debug(f"Got following response {response} from device")
+            stop = time.time()
+            self.last_answer_time = stop-start
+            time.sleep(0.1)
+
+            log.debug(f"Got following response {response} from device after {self.last_answer_time} s")
         except Exception as err:
             log.error(err)
         self.close()

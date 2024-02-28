@@ -12,27 +12,27 @@ class Units:
     
 
 class Axis:
-    X : str =  "X"
-    Y : str =  "Y"
-    Z : str =  "Z"
-    ROT : str =  "4"
-    TILT  : str =  "5"
+    x : str =  "X"
+    y : str =  "Y"
+    z : str =  "Z"
+    rot : str =  "4"
+    tilt  : str =  "5"
 
 
 axis_units = {
-    "X": Units.UM,
-    "Y": Units.UM,
-    "Z": Units.UM,
-    "ROT": Units.CENT_DEG,
-    "TILT": Units.CENT_DEG,
+    "x": Units.UM,
+    "y": Units.UM,
+    "z": Units.UM,
+    "rot": Units.CENT_DEG,
+    "tilt": Units.CENT_DEG,
 }
 
 system_default_units = {
-    "X": Units.CM,
-    "Y": Units.CM,
-    "Z": Units.CM,
-    "ROT": Units.DEG,
-    "TILT": Units.DEG,
+    "x": Units.CM,
+    "y": Units.CM,
+    "z": Units.CM,
+    "rot": Units.DEG,
+    "tilt": Units.DEG,
 }
 
 def parse_number_string(number_string):
