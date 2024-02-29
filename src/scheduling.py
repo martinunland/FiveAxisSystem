@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import numpy as np
 import functools
-from FAS import Position
+from .FAS import Position
 
 
 def linear(x, slope, const):
@@ -103,7 +103,7 @@ class PathTime:
             if val_initial != None and val_target != None:
                 distance = abs(val_target - val_initial)
                 total_time += self.model(
-                    distance, **self.axis_calibration[axis_initial]
+                    distance,200,200, **self.axis_calibration[axis_initial]
                 )
         return total_time
 

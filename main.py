@@ -1,6 +1,6 @@
 from src.scheduling import FASSchedule
 from src.FAS import FiveAxisSystem
-from src.serialcontroller import SerialController
+#from src.serialcontroller import SerialController
 from src.utils_constants import Units
 import logging
 import numpy as np
@@ -8,6 +8,7 @@ import numpy as np
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
+'''
 controller = SerialController("COM5")
 FAS = FiveAxisSystem(controller)
 
@@ -22,6 +23,7 @@ FAS.move_relative_distance(x=2 / Units.MM, y=1 / Units.M, tilt=2 / Units.CENT_DE
 
 FAS.log_current_position()
 
+'''
 
 # Scheduling example
 schedule = FASSchedule()
@@ -36,6 +38,7 @@ schedule.optimize_path()
 
 print(schedule.calculate_total_path_time())  # In this example I got 176 min
 
+'''
 # You can save optimized schedule
 schedule.write_schedule_to_file("optimized_position_schedule.pickle")
 
@@ -45,3 +48,4 @@ schedule.load_schedule_from_file("optimized_position_schedule.pickle")
 # Going through schedule
 for position in schedule:
     FAS.move_absolute_position(**position.to_dict())
+'''
