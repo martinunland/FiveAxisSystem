@@ -6,13 +6,45 @@ from FAS import Position
 def linear(x,slope, const):
     return x * slope + const
 
+def linear_const(x, slope, const, limit):
+    if x>limit:
+        return linear(x,slope,const)
+    else:
+        return linear(limit,slope,const)
+    
 class PathTime:
     axis_calibration = {
-        "x" : {"a_slope": 15.4858e-3, "a_const": 667.16e-3, "s_slope": 21.69987e-3, "s_const": -161.1e-6, "t0": 805.71e-3},
-        "y" : {"a_slope": 15.4858e-3, "a_const": 667.16e-3, "s_slope": 21.69987e-3, "s_const": -161.1e-6, "t0": 805.71e-3},
-        "z" : {"a_slope": 16.7938e-3, "a_const": 641.75e-3, "s_slope": 21.74835e-3, "s_const": -404.0e-6, "t0": 812.973e-3},
-        "tilt" : {"a_slope": 10.919, "a_const": 131.51, "s_slope": 60.3046e-3, "s_const": -1.389e-3, "t0": 	821.750e-3},
-        "rot" : {"a_slope": 3.271, "a_const": 33.37, "s_slope": 20.0614e-3, "s_const": -2.06e-3, "t0": 821.928e-3}
+        "x" : 
+{'a_slope': 0.20790012334298638,
+ 'a_const': 1.9295769879330378,
+ 's_slope': 0.2166979108929974,
+ 's_const': -0.00020895898299489192,
+ 't0': 0.8035466610250618,
+ 'limit': 26.512215558982945},
+        "y" : {'a_slope': 0.20790012334298638,
+ 'a_const': 1.9295769879330378,
+ 's_slope': 0.2166979108929974,
+ 's_const': -0.00020895898299489192,
+ 't0': 0.8035466610250618,
+ 'limit': 26.512215558982945},
+        "z" : {'a_slope': 0.21404669070648036,
+ 'a_const': 1.8086909751945424,
+ 's_slope': 0.21691036585457518,
+ 's_const': -0.0011633157825590718,
+ 't0': 0.8150417874577068,
+ 'limit': 26.394586571979318},
+        "tilt" : {'a_slope': 22.103368696634956,
+ 'a_const': -221.28313103153457,
+ 's_slope': 0.06032301996107505,
+ 's_const': -0.0014802523160998356,
+ 't0': 0.8218185898560731,
+ 'limit': 16.871716286810294},
+        "rot" : {'a_slope': 6.878106827773913,
+ 'a_const': -70.07796079140954,
+ 's_slope': 0.020048707857610395,
+ 's_const': -0.001139030453163392,
+ 't0': 0.8219959728476175,
+ 'limit': 16.431994985962138}
     }
 
     @functools.lru_cache(maxsize=1000000)
@@ -34,8 +66,8 @@ class PathTime:
         return time
     
     @functools.lru_cache(maxsize=1000000)
-    def model(self, distance, speed_adc, acceleration_adc,  a_slope, a_const, s_slope, s_const, t0):
-        acceleration = linear(acceleration_adc, a_slope, a_const)
+    def model(self, distance, speed_adc, acceleration_adc,  a_slope, a_const, s_slope, s_const, t0, limit):
+        acceleration = linear_const(acceleration_adc, a_slope, a_const, limit)
         max_speed = linear(speed_adc, s_slope, s_const)
         return self.ramp_motion_time(distance, max_speed, acceleration)+t0
     
