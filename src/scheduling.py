@@ -8,54 +8,46 @@ def linear(x, slope, const):
     return x * slope + const
 
 
-def linear_const(x, slope, const, limit):
-    if x > limit:
-        return linear(x, slope, const)
-    else:
-        return linear(limit, slope, const)
-
+def linear_step(x, slope, const):
+    x = int(x/10)*10
+    return linear(x,slope,const)
 
 class PathTime:
     axis_calibration = {
         "x": {
-            "a_slope": 0.20790012334298638,
-            "a_const": 1.9295769879330378,
-            "s_slope": 0.2166979108929974,
-            "s_const": -0.00020895898299489192,
-            "t0": 0.8035466610250618,
-            "limit": 26.512215558982945,
+            "a_slope": 0.2904409779122619,
+            "a_const": 1.2077330604928136,
+            "s_slope": 0.21638106368842852,
+            "s_const": 0.0018993869426034257,
+            "t0": 0.8908983496211884,
         },
         "y": {
-            "a_slope": 0.20790012334298638,
-            "a_const": 1.9295769879330378,
-            "s_slope": 0.2166979108929974,
-            "s_const": -0.00020895898299489192,
-            "t0": 0.8035466610250618,
-            "limit": 26.512215558982945,
+            "a_slope": 0.23827953982528538,
+            "a_const": 2.0345359162324947,
+            "s_slope": 0.21659195037066725,
+            "s_const": 0.0007889468963793958,
+            "t0": 0.8251032150944726,
         },
         "z": {
-            "a_slope": 0.21404669070648036,
-            "a_const": 1.8086909751945424,
-            "s_slope": 0.21691036585457518,
-            "s_const": -0.0011633157825590718,
-            "t0": 0.8150417874577068,
-            "limit": 26.394586571979318,
+            "a_slope": 0.23342700810816303,
+            "a_const": 2.127238368785634,
+            "s_slope": 0.21652565324121187,
+            "s_const": 0.000773052604182803,
+            "t0": 0.8161839563958946,
         },
         "tilt": {
-            "a_slope": 22.103368696634956,
-            "a_const": -221.28313103153457,
-            "s_slope": 0.06032301996107505,
-            "s_const": -0.0014802523160998356,
-            "t0": 0.8218185898560731,
-            "limit": 16.871716286810294,
+            "a_slope": 17.752623230479188,
+            "a_const": -28.161817079227312,
+            "s_slope": 0.06027239386618709,
+            "s_const": -0.001236066727795777,
+            "t0": 0.8217697818261861,
         },
         "rot": {
-            "a_slope": 6.878106827773913,
-            "a_const": -70.07796079140954,
-            "s_slope": 0.020048707857610395,
-            "s_const": -0.001139030453163392,
-            "t0": 0.8219959728476175,
-            "limit": 16.431994985962138,
+            "a_slope": 6.081587120398348,
+            "a_const": -17.82680508910915,
+            "s_slope": 0.020025354843183265,
+            "s_const": -0.00014466021729686357,
+            "t0": 0.8218914594786518,
         },
     }
 
@@ -87,10 +79,9 @@ class PathTime:
         a_const,
         s_slope,
         s_const,
-        t0,
-        limit,
+        t0
     ):
-        acceleration = linear_const(acceleration_adc, a_slope, a_const, limit)
+        acceleration = linear_step(acceleration_adc, a_slope, a_const)
         max_speed = linear(speed_adc, s_slope, s_const)
         return self.ramp_motion_time(distance, max_speed, acceleration) + t0
 
@@ -103,7 +94,7 @@ class PathTime:
             if val_initial != None and val_target != None:
                 distance = abs(val_target - val_initial)
                 total_time += self.model(
-                    distance,200,200, **self.axis_calibration[axis_initial]
+                    distance, 200, 200, **self.axis_calibration[axis_initial]
                 )
         return total_time
 
